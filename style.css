@@ -1207,6 +1207,10 @@ button:focus {
 	.mu-contact-top-single {
 		margin-bottom: 25px;
 	}
+	.mu-service-header{
+		width: 100%;
+		padding: 10%;
+	}
 	
 		
 }
