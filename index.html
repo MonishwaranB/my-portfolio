@@ -291,6 +291,7 @@
 																<div class="mu-contact-bottom">							
 																		<!-- EmailJS Contact Form -->
 																		<div id="responseMessage" style="margin-top: 10px;"></div>
+																		
 																		<form id="ajax-contact" method="post" class="mu-contact-form">																			
 																			<div class="form-group">																				
 																				<input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
@@ -334,13 +335,6 @@
 			const form = document.getElementById('ajax-contact');			
 			var responseMessageDiv = document.getElementById('responseMessage');
 		
-			// Submit form on Enter key press with validation
-			form.addEventListener('keydown', function(event) {
-				if (event.key === 'Enter') {
-					event.preventDefault();
-						form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-				}
-			});
 		
 			form.addEventListener('submit', async function(event) {
 				event.preventDefault();
