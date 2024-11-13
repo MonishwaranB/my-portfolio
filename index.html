@@ -288,21 +288,23 @@
 																	</div>
 															</div>	
 															<div class="col-md-12">
-																<div class="mu-contact-bottom">
-																		<div id="form-messages"></div>
+																<div class="mu-contact-bottom">							
 																		<!-- EmailJS Contact Form -->
-																		<form id="ajax-contact" method="post" class="mu-contact-form">
-																			<div class="form-group">
+																		<div id="responseMessage" style="margin-top: 10px;"></div>
+																		<form id="ajax-contact" method="post" class="mu-contact-form">																			
+																			<div class="form-group">																				
 																				<input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
 																			</div>
 																			<div class="form-group">
+																				
 																				<input type="email" class="form-control" placeholder="Enter Email" id="email" name="email" required>
 																			</div>
 																			<div class="form-group">
+																				
 																				<textarea class="form-control" placeholder="Your Message" id="message" name="message" required></textarea>
 																			</div>
-																			<button type="submit" class="mu-submit-btn">Send Message</button>																			
-																		</form>																																		
+																			<button type="submit" style="margin-top: 4rem;" class="mu-submit-btn">Send Message</button>																			
+																		</form>																																																				
 																</div>
 														</div>														
 													</div>
@@ -310,8 +312,9 @@
 									</div>
 							</div>
 					</div>
-			</div>
+			</div>		
 	</section>
+	
 	</main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
@@ -321,28 +324,36 @@
     <script type="text/javascript" src="assets/js/typed.min.js"></script>
     <script src="assets/js/jquery.appear.js"></script>
     <script type="text/javascript" src="assets/js/jquery.lineProgressbar.js"></script>
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-</script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 		<script type="text/javascript" src="assets/js/custom.js"></script>
 		<script type="text/javascript">
 			(function() {
 				emailjs.init("EwbRKrnNlQuPnsHVH"); // Replace with your actual EmailJS public key
 			})();
 		
-			document.getElementById('ajax-contact').addEventListener('submit', async function(event) {
+			const form = document.getElementById('ajax-contact');			
+			var responseMessageDiv = document.getElementById('responseMessage');
+		
+			// Submit form on Enter key press with validation
+			form.addEventListener('keydown', function(event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+						form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+				}
+			});
+		
+			form.addEventListener('submit', async function(event) {
 				event.preventDefault();
 		
-				const form = event.target;
-				const name = form.name.value;
-				const email = form.email.value;
-				const message = form.message.value;
-				let loading = true;
+				const name = form.name.value.trim();
+				const email = form.email.value.trim();
+				const message = form.message.value.trim();
 		
-				const responseMessageDiv = document.getElementById('form-messages');
+				let loading = true;
 				const submitButton = form.querySelector('.mu-submit-btn');
 		
-				// Clear any previous messages and disable the button
-				loading ? responseMessageDiv.innerHTML = "Loading..." : '';
+				// Show loading message and disable the button
+				responseMessageDiv.innerHTML = "Loading...";
 				submitButton.disabled = true;
 		
 				const templateParams = {
@@ -356,27 +367,27 @@
 					// Send the email using EmailJS
 					const response = await emailjs.send('service_7da9sir', 'template_owe6e5p', templateParams);
 					console.log('Success!', response);
-					
 		
 					if (response.status === 200) {
-						loading=false;
-						responseMessageDiv.innerHTML =  "Your message was sent successfully!";
+						loading = false;
+						responseMessageDiv.innerHTML = "Your message was sent successfully!";
 						responseMessageDiv.style.color = "green";
+		
+						// Clear the form fields
+						form.reset();
 					}
 				} catch (error) {
 					console.log('Failed...', error);
 					responseMessageDiv.innerHTML = "Oops! An error occurred, and your message could not be sent.";
-					loading:false
+					loading = false;
 					responseMessageDiv.style.color = "red";
 				} finally {
 					setTimeout(() => {
 						responseMessageDiv.innerHTML = "";
+						submitButton.disabled = false;
 					}, 3000);
 				}
 			});
-		</script>
-		
-		
-		
+		</script>		
   </body>
 </html>
